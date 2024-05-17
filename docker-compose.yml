@@ -73,8 +73,9 @@ services:
       context: .
       dockerfile: Dockerfile.torproxy
     restart: unless-stopped
-    volumes:
-      - ./torrc:/etc/tor/torrc:ro
+    environment:
+      - BRIDGE1=${LPC_TOR_BRIDGE1}
+      - BRIDGE2=${LPC_TOR_BRIDGE2}
     ports:
       - 8118:8118
 

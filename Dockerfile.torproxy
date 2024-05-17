@@ -2,7 +2,7 @@ FROM golang:alpine AS go-build
 
 # Build /go/bin/obfs4proxy & /go/bin/meek-server
 RUN apk --no-cache add --update git \
- && go get -v git.torproject.org/pluggable-transports/obfs4.git/obfs4proxy \
+ && go install gitlab.com/yawning/obfs4.git/obfs4proxy@latest \
  && cp -rv /go/bin /usr/local/
 
 FROM alpine
@@ -10,6 +10,14 @@ FROM alpine
 # Install tor and privoxy
 RUN apk --no-cache --no-progress upgrade && \
     apk --no-cache --no-progress add bash curl privoxy shadow tini tor tzdata&&\
+    mv /etc/privoxy/config.new /etc/privoxy/config && \
+    mv /etc/privoxy/default.action.new /etc/privoxy/default.action && \
+    mv /etc/privoxy/user.action.new /etc/privoxy/user.action && \
+    mv /etc/privoxy/default.filter.new /etc/privoxy/default.filter && \
+    mv /etc/privoxy/user.filter.new /etc/privoxy/user.filter && \
+    mv /etc/privoxy/regression-tests.action.new /etc/privoxy/regression-tests.action && \
+    mv /etc/privoxy/trust.new /etc/privoxy/trust && \
+    mv /etc/privoxy/match-all.action.new /etc/privoxy/match-all.action && \
     file='/etc/privoxy/config' && \
     sed -i 's|^\(accept-intercepted-requests\) .*|\1 1|' $file && \
     sed -i '/^listen/s|127\.0\.0\.1||' $file && \

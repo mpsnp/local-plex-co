@@ -79,6 +79,20 @@ password() { local passwd="$1" file=/etc/tor/torrc
                 "tor --hash-password '$passwd' |tail -n 1")" >>$file 2>/dev/null
 }
 
+### password: setup a bridge
+# Arguments:
+#   br) bridge to set
+# Return: Updated configuration file
+bridge() { local br1="$1" br2="$2" file=/etc/tor/torrc
+    sed -i '/^UseBridges/d' $file
+    sed -i '/^ClientTransportPlugin/d' $file
+    sed -i '/^Bridge/d' $file
+    echo "UseBridges 1" >>$file
+    echo "ClientTransportPlugin obfs4 exec /usr/local/bin/obfs4proxy managed" >>$file
+    echo "Bridge $br1" >>$file
+    echo "Bridge $br2" >>$file
+}
+
 ### usage: Help
 # Arguments:
 #   none)
@@ -124,6 +138,7 @@ shift $(( OPTIND - 1 ))
 [[ "${EXITNODE:-""}" ]] && exitnode
 [[ "${LOCATION:-""}" ]] && exitnode_country "$LOCATION"
 [[ "${PASSWORD:-""}" ]] && password "$PASSWORD"
+[[ "${BRIDGE1:-""}" ]] && bridge "$BRIDGE1" "$BRIDGE2"
 [[ "${SERVICE:-""}" ]] && eval hidden_service \
             $(sed 's/^/"/; s/$/"/; s/;/" "/g' <<< $SERVICE)
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o tor
