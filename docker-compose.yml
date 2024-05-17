@@ -26,6 +26,7 @@ services:
     container_name: sonarr
     image: linuxserver/sonarr
     restart: unless-stopped
+    network_mode: "service:gluetun"
     volumes:
       - ./sonarr:/config
       - ./media/serials:/serials
@@ -41,6 +42,7 @@ services:
     container_name: radarr
     image: linuxserver/radarr
     restart: unless-stopped
+    network_mode: "service:gluetun"
     volumes:
       - ./radarr:/config
       - ./media/movies:/movies
@@ -72,30 +74,20 @@ services:
     container_name: jackett
     image: linuxserver/jackett
     restart: unless-stopped
+    network_mode: "service:gluetun"
     volumes:
       - ./jackett:/config
     ports:
       - 9117:9117
     depends_on:
-      - torproxy
+      - gluetun
       - flaresolverr
-
-  torproxy:
-    container_name: torproxy
-    build:
-      context: .
-      dockerfile: Dockerfile.torproxy
-    restart: unless-stopped
-    environment:
-      - BRIDGE1=${LPC_TOR_BRIDGE1}
-      - BRIDGE2=${LPC_TOR_BRIDGE2}
-    ports:
-      - 8118:8118
 
   flaresolverr:
     container_name: flaresolverr
     image: flaresolverr/flaresolverr:latest
     restart: unless-stopped
+    network_mode: "service:gluetun"
     environment:
       - LOG_LEVEL=info
       - LOG_HTML=false
@@ -113,3 +105,18 @@ services:
       - radarr
     volumes:
       - ./gramarr:/config     
+
+  gluetun:
+    container_name: gluetun
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - VPN_ENDPOINT_IP=${LPC_VPN_ENDPOINT_IP}
+      - VPN_ENDPOINT_PORT=${LPC_VPN_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${LPC_WIREGUARD_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${LPC_WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_PRESHARED_KEY=${LPC_WIREGUARD_PRESHARED_KEY}
+      - WIREGUARD_ADDRESSES=${LPC_WIREGUARD_ADDRESSES}
