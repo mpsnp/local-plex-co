@@ -74,6 +74,9 @@ services:
       - ./jackett:/config
     ports:
       - 9117:9117
+    depends_on:
+      - torproxy
+      - flaresolverr
 
   torproxy:
     container_name: torproxy
