@@ -69,7 +69,7 @@ services:
 
   torproxy:
     container_name: torproxy
-    image: dperson/torproxy:latest
+    build: Dockerfile.torproxy
     restart: unless-stopped
     volumes:
       - ./torrc:/etc/tor/torrc:ro
