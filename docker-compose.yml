@@ -32,6 +32,9 @@ services:
       - ./downloads:/downloads
     ports:
       - 8989:8989
+    depends_on:
+      - qbittorrent
+      - jackett
 
   radarr:
     container_name: radarr
@@ -43,13 +46,18 @@ services:
       - ./downloads:/downloads
     ports:
       - 7878:7878
+    depends_on:
+      - qbittorrent
+      - jackett
 
   qbittorrent:
     container_name: qbittorrent
     image: linuxserver/qbittorrent
     restart: unless-stopped
     environment:
+      - TZ=${LPC_TIMEZONE}
       - WEBUI_PORT=8068
+      - TORRENTING_PORT=6881
     volumes:
       - ./qbittorrent:/config
       - ./downloads:/downloads
