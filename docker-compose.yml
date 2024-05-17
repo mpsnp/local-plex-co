@@ -71,6 +71,8 @@ services:
     container_name: torproxy
     image: dperson/torproxy:latest
     restart: unless-stopped
+    volumes:
+      - ./torrc:/etc/tor/torrc:ro
 
   gramarrru:
     container_name: gramarrru
