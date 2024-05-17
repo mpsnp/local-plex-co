@@ -63,8 +63,6 @@ services:
     container_name: jackett
     image: linuxserver/jackett
     restart: unless-stopped
-    environment:
-      - RUN_OPTS=--ProxyConnection=torproxy:8118
     volumes:
       - ./jackett:/config
     ports:
