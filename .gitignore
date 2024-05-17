@@ -1,0 +1,7 @@
+.env
+media/
+jackett/
+plex/
+qbittorrent/
+radarr/
+sonarr/
