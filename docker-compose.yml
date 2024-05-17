@@ -35,6 +35,7 @@ services:
     depends_on:
       - qbittorrent
       - jackett
+      - flaresolverr
 
   radarr:
     container_name: radarr
@@ -49,6 +50,7 @@ services:
     depends_on:
       - qbittorrent
       - jackett
+      - flaresolverr
 
   qbittorrent:
     container_name: qbittorrent
