@@ -73,6 +73,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./torrc:/etc/tor/torrc:ro
+    ports:
+      - 8118:8118
 
   gramarrru:
     container_name: gramarrru
