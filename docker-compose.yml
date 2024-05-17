@@ -68,7 +68,7 @@ services:
       - 9117:9117
 
   torproxy:
-    container_name: torproxy2
+    container_name: torproxy
     image: dperson/torproxy:latest
     restart: unless-stopped
 
