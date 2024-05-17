@@ -87,6 +87,18 @@ services:
     ports:
       - 8118:8118
 
+  flaresolverr:
+    container_name: flaresolverr
+    image: flaresolverr/flaresolverr:latest
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=${LPC_TIMEZONE}
+    ports:
+      - 8191:8191
+
   gramarrru:
     container_name: gramarrru
     image: memodota/gramarrru
