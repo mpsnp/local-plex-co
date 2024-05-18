@@ -1,20 +1,11 @@
 services:
-  traefik:
-    container_name: traefik
-    image: traefik:v3.0
-    restart: unless-stopped
-    command: 
-      - "--log.level=DEBUG"
-      - "--accesslog=true"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
     ports:
       - 80:80
-      - 8080:8080
     volumes:
-      - /run/user/1000/docker.sock:/var/run/docker.sock
+      - /run/user/1000/docker.sock:/var/run/docker.sock:ro
     
   plex:
     container_name: plex
@@ -30,6 +21,8 @@ services:
       - 32413:32413/udp
       - 32414:32414/udp
     environment:
+      - VIRTUAL_HOST=plex.local
+      - VIRTUAL_PORT=32400
       - TZ=${LPC_TIMEZONE}
       - PLEX_CLAIM=${LPC_PLEX_CLAIM}
       - ADVERTISE_IP=http://plex.local/
@@ -38,13 +31,6 @@ services:
       - ./plex/config:/config
       - ./plex/transcode:/transcode
       - ./media:/data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.plex.entrypoints=web"
-      - "traefik.http.routers.plex.rule=Host(`plex.local`)"
-      - "traefik.http.routers.plex.service=plex"
-      - "traefik.http.services.plex.loadBalancer.server.port=32400"
-      - "traefik.http.services.plex.loadbalancer.server.scheme=http"
 
   sonarr:
     container_name: sonarr
@@ -55,19 +41,15 @@ services:
       - ./sonarr:/config
       - ./media/serials:/serials
       - ./downloads:/downloads
+    environment:
+      - VIRTUAL_HOST=sonarr.local
+      - VIRTUAL_PORT=8989
     # ports:
     #   - 8989:8989
     depends_on:
       - qbittorrent
       - jackett
       - flaresolverr
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sonarr.entrypoints=web"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.local`)"
-      - "traefik.http.routers.sonarr.service=sonarr"
-      - "traefik.http.services.sonarr.loadBalancer.server.port=8989"
-      - "traefik.http.services.sonarr.loadbalancer.server.scheme=http"
 
   radarr:
     container_name: radarr
@@ -78,25 +60,23 @@ services:
       - ./radarr:/config
       - ./media/movies:/movies
       - ./downloads:/downloads
+    environment:
+      - VIRTUAL_HOST=radarr.local
+      - VIRTUAL_PORT=7878
     # ports:
     #   - 7878:7878
     depends_on:
       - qbittorrent
       - jackett
       - flaresolverr
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.radarr.entrypoints=web"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.local`)"
-      - "traefik.http.routers.radarr.service=radarr"
-      - "traefik.http.services.radarr.loadBalancer.server.port=7878"
-      - "traefik.http.services.radarr.loadbalancer.server.scheme=http"
 
   qbittorrent:
     container_name: qbittorrent
     image: linuxserver/qbittorrent
     restart: unless-stopped
     environment:
+      - VIRTUAL_HOST=qbittorrent.local
+      - VIRTUAL_PORT=8068
       - TZ=${LPC_TIMEZONE}
       - WEBUI_PORT=8068
       - TORRENTING_PORT=6881
@@ -107,31 +87,20 @@ services:
       - 6881:6881
       - 6881:6881/udp
       - 8068:8068
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qbittorrent.entrypoints=web"
-      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.local`)"
-      - "traefik.http.routers.qbittorrent.service=qbittorrent"
-      - "traefik.http.services.qbittorrent.loadBalancer.server.port=8068"
-      - "traefik.http.services.qbittorrent.loadbalancer.server.scheme=http"
 
   jackett:
     container_name: jackett
     image: linuxserver/jackett
     restart: unless-stopped
     network_mode: "service:gluetun"
+    environment:
+      - VIRTUAL_HOST=jackett.local
+      - VIRTUAL_PORT=9117
     volumes:
       - ./jackett:/config
     depends_on:
       - gluetun
       - flaresolverr
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jackett.entrypoints=web"
-      - "traefik.http.routers.jackett.rule=Host(`jackett.local`)"
-      - "traefik.http.routers.jackett.service=jackett"
-      - "traefik.http.services.jackett.loadBalancer.server.port=9117"
-      - "traefik.http.services.jackett.loadbalancer.server.scheme=http"
 
   flaresolverr:
     container_name: flaresolverr
