@@ -87,10 +87,9 @@ services:
     container_name: jackett
     image: linuxserver/jackett
     restart: unless-stopped
-    network_mode: "service:gluetun"
-    # environment:
-    #   VIRTUAL_HOST: jackett.local
-    #   VIRTUAL_PORT: "9117"
+    environment:
+      VIRTUAL_HOST: jackett.local
+      VIRTUAL_PORT: "9117"
     volumes:
       - ./jackett:/config
     depends_on:
@@ -121,20 +120,9 @@ services:
   gluetun:
     container_name: gluetun
     image: qmcgaw/gluetun
-    network_mode: host
     cap_add:
       - NET_ADMIN
     environment:
-      VIRTUAL_HOST_MULTIPORTS: |-
-        # sonarr.local:
-        #   "/":
-        #     port: 8989
-        # radarr.local:
-        #   "/":
-        #     port: 7878
-        jackett.local:
-          "/":
-            port: 9117
       VPN_SERVICE_PROVIDER: custom
       VPN_TYPE: wireguard
       VPN_ENDPOINT_IP: ${LPC_VPN_ENDPOINT_IP}
