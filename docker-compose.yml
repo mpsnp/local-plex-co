@@ -6,7 +6,6 @@ services:
       - 80:80
     volumes:
       - /run/user/1000/docker.sock:/tmp/docker.sock:ro
-      - ./nignx.conf:/etc/nginx/conf.d/default.conf
     
   plex:
     container_name: plex
