@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     command: 
       - "--log.level=DEBUG"
+      - "--accesslog=true"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -60,6 +61,13 @@ services:
       - qbittorrent
       - jackett
       - flaresolverr
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.entrypoints=web"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.local`)"
+      - "traefik.http.routers.sonarr.service=sonarr"
+      - "traefik.http.services.sonarr.loadBalancer.server.port=8989"
+      - "traefik.http.services.sonarr.loadbalancer.server.scheme=http"
 
   radarr:
     container_name: radarr
@@ -76,6 +84,13 @@ services:
       - qbittorrent
       - jackett
       - flaresolverr
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.entrypoints=web"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.local`)"
+      - "traefik.http.routers.radarr.service=radarr"
+      - "traefik.http.services.radarr.loadBalancer.server.port=7878"
+      - "traefik.http.services.radarr.loadbalancer.server.scheme=http"
 
   qbittorrent:
     container_name: qbittorrent
@@ -110,6 +125,13 @@ services:
     depends_on:
       - gluetun
       - flaresolverr
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.entrypoints=web"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.local`)"
+      - "traefik.http.routers.jackett.service=jackett"
+      - "traefik.http.services.jackett.loadBalancer.server.port=9117"
+      - "traefik.http.services.jackett.loadbalancer.server.scheme=http"
 
   flaresolverr:
     container_name: flaresolverr
@@ -151,10 +173,3 @@ services:
       - 9117:9117
       - 7878:7878
       - 8989:8989
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jackett.entrypoints=web"
-      - "traefik.http.routers.jackett.rule=Host(`jackett.local`)"
-      - "traefik.http.routers.jackett.service=jackett"
-      - "traefik.http.services.jackett.loadBalancer.server.port=9117"
-      - "traefik.http.services.jackett.loadbalancer.server.scheme=http"
