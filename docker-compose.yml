@@ -6,6 +6,7 @@ services:
       - 80:80
     volumes:
       - /run/user/1000/docker.sock:/tmp/docker.sock:ro
+      - ./jackett.conf:/etc/nginx/vhost.d/jackett.local_location_override
     
   plex:
     container_name: plex
@@ -87,6 +88,9 @@ services:
     image: linuxserver/jackett
     restart: unless-stopped
     network_mode: "service:gluetun"
+    environment:
+      VIRTUAL_HOST: jackett.local
+      VIRTUAL_PORT: "9117"
     volumes:
       - ./jackett:/config
     depends_on:
@@ -120,8 +124,6 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      VIRTUAL_HOST: jackett.local
-      VIRTUAL_PORT: "9117"
       # VIRTUAL_HOST_MULTIPORTS: |-
       #   sonarr.local:
       #     "/":
