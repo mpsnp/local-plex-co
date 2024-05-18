@@ -120,16 +120,18 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      VIRTUAL_HOST_MULTIPORTS: |-
-        sonarr.local:
-          "/":
-            port: 8989
-        radarr.local:
-          "/":
-            port: 7878
-        jackett.local:
-          "/":
-            port: 9117
+      VIRTUAL_HOST: jackett.local
+      VIRTUAL_PORT: "9117"
+      # VIRTUAL_HOST_MULTIPORTS: |-
+      #   sonarr.local:
+      #     "/":
+      #       port: 8989
+      #   radarr.local:
+      #     "/":
+      #       port: 7878
+      #   jackett.local:
+      #     "/":
+      #       port: 9117
       VPN_SERVICE_PROVIDER: custom
       VPN_TYPE: wireguard
       VPN_ENDPOINT_IP: ${LPC_VPN_ENDPOINT_IP}
