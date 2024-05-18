@@ -21,11 +21,11 @@ services:
       - 32413:32413/udp
       - 32414:32414/udp
     environment:
-      - VIRTUAL_HOST=plex.local
-      - VIRTUAL_PORT=32400
-      - TZ=${LPC_TIMEZONE}
-      - PLEX_CLAIM=${LPC_PLEX_CLAIM}
-      - ADVERTISE_IP=http://plex.local/
+      VIRTUAL_HOST: plex.local
+      VIRTUAL_PORT: "32400"
+      TZ: ${LPC_TIMEZONE}
+      PLEX_CLAIM: ${LPC_PLEX_CLAIM}
+      ADVERTISE_IP: http://plex.local/
     hostname: plex.local
     volumes:
       - ./plex/config:/config
@@ -41,9 +41,6 @@ services:
       - ./sonarr:/config
       - ./media/serials:/serials
       - ./downloads:/downloads
-    environment:
-      - VIRTUAL_HOST=sonarr.local
-      - VIRTUAL_PORT=8989
     # ports:
     #   - 8989:8989
     depends_on:
@@ -60,9 +57,6 @@ services:
       - ./radarr:/config
       - ./media/movies:/movies
       - ./downloads:/downloads
-    environment:
-      - VIRTUAL_HOST=radarr.local
-      - VIRTUAL_PORT=7878
     # ports:
     #   - 7878:7878
     depends_on:
@@ -75,11 +69,9 @@ services:
     image: linuxserver/qbittorrent
     restart: unless-stopped
     environment:
-      - VIRTUAL_HOST=qbittorrent.local
-      - VIRTUAL_PORT=8068
-      - TZ=${LPC_TIMEZONE}
-      - WEBUI_PORT=8068
-      - TORRENTING_PORT=6881
+      TZ: ${LPC_TIMEZONE}
+      WEBUI_PORT: "8068"
+      TORRENTING_PORT: "6881"
     volumes:
       - ./qbittorrent:/config
       - ./downloads:/downloads
@@ -93,9 +85,6 @@ services:
     image: linuxserver/jackett
     restart: unless-stopped
     network_mode: "service:gluetun"
-    environment:
-      - VIRTUAL_HOST=jackett.local
-      - VIRTUAL_PORT=9117
     volumes:
       - ./jackett:/config
     depends_on:
@@ -108,10 +97,10 @@ services:
     restart: unless-stopped
     network_mode: "service:gluetun"
     environment:
-      - LOG_LEVEL=info
-      - LOG_HTML=false
-      - CAPTCHA_SOLVER=none
-      - TZ=${LPC_TIMEZONE}
+      LOG_LEVEL: info
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: none
+      TZ: ${LPC_TIMEZONE}
 
   gramarrru:
     container_name: gramarrru
@@ -129,14 +118,24 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      - VPN_SERVICE_PROVIDER=custom
-      - VPN_TYPE=wireguard
-      - VPN_ENDPOINT_IP=${LPC_VPN_ENDPOINT_IP}
-      - VPN_ENDPOINT_PORT=${LPC_VPN_ENDPOINT_PORT}
-      - WIREGUARD_PUBLIC_KEY=${LPC_WIREGUARD_PUBLIC_KEY}
-      - WIREGUARD_PRIVATE_KEY=${LPC_WIREGUARD_PRIVATE_KEY}
-      - WIREGUARD_PRESHARED_KEY=${LPC_WIREGUARD_PRESHARED_KEY}
-      - WIREGUARD_ADDRESSES=${LPC_WIREGUARD_ADDRESSES}
+      VIRTUAL_HOST_MULTIPORTS: |-
+        sonarr.local:
+          "/":
+            port: 8989
+        radarr.local:
+          "/":
+            port: 7878
+        jackett.local:
+          "/":
+            port: 9117
+      VPN_SERVICE_PROVIDER: custom
+      VPN_TYPE: wireguard
+      VPN_ENDPOINT_IP: ${LPC_VPN_ENDPOINT_IP}
+      VPN_ENDPOINT_PORT: ${LPC_VPN_ENDPOINT_PORT}
+      WIREGUARD_PUBLIC_KEY: ${LPC_WIREGUARD_PUBLIC_KEY}
+      WIREGUARD_PRIVATE_KEY: ${LPC_WIREGUARD_PRIVATE_KEY}
+      WIREGUARD_PRESHARED_KEY: ${LPC_WIREGUARD_PRESHARED_KEY}
+      WIREGUARD_ADDRESSES: ${LPC_WIREGUARD_ADDRESSES}
     ports:
       - 8191:8191
       - 9117:9117
