@@ -104,15 +104,15 @@ services:
       CAPTCHA_SOLVER: none
       TZ: ${LPC_TIMEZONE}
 
-  gramarrru:
-    container_name: gramarrru
-    image: memodota/gramarrru
-    restart: unless-stopped
-    depends_on:
-      - sonarr
-      - radarr
-    volumes:
-      - ./gramarr:/config     
+  # gramarrru:
+  #   container_name: gramarrru
+  #   image: memodota/gramarrru
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - sonarr
+  #     - radarr
+  #   volumes:
+  #     - ./gramarr:/config     
 
   gluetun:
     container_name: gluetun
