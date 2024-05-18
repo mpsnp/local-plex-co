@@ -69,6 +69,8 @@ services:
     image: linuxserver/qbittorrent
     restart: unless-stopped
     environment:
+      VIRTUAL_HOST: qbittorrent.local
+      VIRTUAL_PORT: "8068"
       TZ: ${LPC_TIMEZONE}
       WEBUI_PORT: "8068"
       TORRENTING_PORT: "6881"
