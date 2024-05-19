@@ -113,6 +113,7 @@ services:
     image: qmcgaw/gluetun
     cap_add:
       - NET_ADMIN
+    privileged: true
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:
