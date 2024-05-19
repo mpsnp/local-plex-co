@@ -113,6 +113,8 @@ services:
     image: qmcgaw/gluetun
     cap_add:
       - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
     environment:
       HTTPPROXY: "on"
       HTTPPROXY_LISTENING_ADDRESS: ":8888"
