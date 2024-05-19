@@ -9,7 +9,7 @@ services:
     
   plex:
     container_name: plex
-    image: plexinc/pms-docker
+    image: lscr.io/linuxserver/plex:latest
     restart: unless-stopped
     ports:
       - 32400:32400/tcp
@@ -33,7 +33,7 @@ services:
     volumes:
       - ./plex/config:/config
       - ./plex/transcode:/transcode
-      - ./media:/data
+      - ./data/media:/data/media
 
   sonarr:
     container_name: sonarr
@@ -42,8 +42,7 @@ services:
     hostname: sonarr.local
     volumes:
       - ./sonarr:/config
-      - ./media/serials:/serials
-      - ./downloads:/downloads
+      - ./data:/data
     environment:
       VIRTUAL_HOST: sonarr.local
       VIRTUAL_PORT: "8989"
@@ -62,8 +61,7 @@ services:
     hostname: radarr.local
     volumes:
       - ./radarr:/config
-      - ./media/movies:/movies
-      - ./downloads:/downloads
+      - ./data:/data
     environment:
       VIRTUAL_HOST: radarr.local
       VIRTUAL_PORT: "7878"
@@ -90,7 +88,7 @@ services:
       UMASK: "022"
     volumes:
       - ./qbittorrent:/config
-      - ./downloads:/downloads
+      - ./data/torrents:/data/torrents
     ports:
       - 6881:6881
       - 6881:6881/udp
