@@ -1,7 +1,8 @@
 services:
   nginx-proxy:
-    image: nginxproxy/nginx-proxy:alpine
     container_name: nginx-proxy
+    image: nginxproxy/nginx-proxy:alpine
+    restart: unless-stopped
     ports:
       - 80:80
     volumes:
@@ -119,6 +120,7 @@ services:
   gluetun:
     container_name: gluetun
     image: qmcgaw/gluetun
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     privileged: true
