@@ -26,8 +26,8 @@ services:
       TZ: ${LPC_TIMEZONE}
       PLEX_CLAIM: ${LPC_PLEX_CLAIM}
       ADVERTISE_IP: http://plex.local/
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "0"
+      PGID: "0"
       UMASK: "022"
     hostname: plex.local
     volumes:
@@ -50,7 +50,6 @@ services:
       PGID: "0"
       UMASK: "022"
     depends_on:
-      - qbittorrent
       - jackett
       - flaresolverr
 
@@ -69,7 +68,6 @@ services:
       PGID: "0"
       UMASK: "022"
     depends_on:
-      - qbittorrent
       - jackett
       - flaresolverr
 
