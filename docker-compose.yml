@@ -46,8 +46,8 @@ services:
     environment:
       VIRTUAL_HOST: sonarr.local
       VIRTUAL_PORT: "8989"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "0"
+      PGID: "0"
       UMASK: "022"
     depends_on:
       - qbittorrent
@@ -65,8 +65,8 @@ services:
     environment:
       VIRTUAL_HOST: radarr.local
       VIRTUAL_PORT: "7878"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "0"
+      PGID: "0"
       UMASK: "022"
     depends_on:
       - qbittorrent
@@ -83,8 +83,8 @@ services:
       TZ: ${LPC_TIMEZONE}
       WEBUI_PORT: "8068"
       TORRENTING_PORT: "6881"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "0"
+      PGID: "0"
       UMASK: "022"
     volumes:
       - ./qbittorrent:/config
