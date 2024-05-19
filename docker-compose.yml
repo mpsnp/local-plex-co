@@ -6,7 +6,6 @@ services:
       - 80:80
     volumes:
       - /run/user/1000/docker.sock:/tmp/docker.sock:ro
-      # - ./jackett.conf:/etc/nginx/vhost.d/jackett.local_location_override
     
   plex:
     container_name: plex
@@ -37,13 +36,14 @@ services:
     container_name: sonarr
     image: linuxserver/sonarr
     restart: unless-stopped
-    network_mode: "service:gluetun"
+    hostname: sonarr.local
     volumes:
       - ./sonarr:/config
       - ./media/serials:/serials
       - ./downloads:/downloads
-    # ports:
-    #   - 8989:8989
+    environment:
+      VIRTUAL_HOST: sonarr.local
+      VIRTUAL_PORT: "8989"
     depends_on:
       - qbittorrent
       - jackett
@@ -53,13 +53,14 @@ services:
     container_name: radarr
     image: linuxserver/radarr
     restart: unless-stopped
-    network_mode: "service:gluetun"
+    hostname: radarr.local
     volumes:
       - ./radarr:/config
       - ./media/movies:/movies
       - ./downloads:/downloads
-    # ports:
-    #   - 7878:7878
+    environment:
+      VIRTUAL_HOST: radarr.local
+      VIRTUAL_PORT: "7878"
     depends_on:
       - qbittorrent
       - jackett
@@ -90,6 +91,7 @@ services:
     environment:
       VIRTUAL_HOST: jackett.local
       VIRTUAL_PORT: "9117"
+    hostname: jackett.local
     volumes:
       - ./jackett:/config
     depends_on:
@@ -100,22 +102,11 @@ services:
     container_name: flaresolverr
     image: flaresolverr/flaresolverr:latest
     restart: unless-stopped
-    network_mode: "service:gluetun"
     environment:
       LOG_LEVEL: info
       LOG_HTML: "false"
       CAPTCHA_SOLVER: none
       TZ: ${LPC_TIMEZONE}
-
-  # gramarrru:
-  #   container_name: gramarrru
-  #   image: memodota/gramarrru
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - sonarr
-  #     - radarr
-  #   volumes:
-  #     - ./gramarr:/config     
 
   gluetun:
     container_name: gluetun
@@ -123,6 +114,8 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
+      HTTPPROXY: "on"
+      HTTPPROXY_LISTENING_ADDRESS: "8888"
       VPN_SERVICE_PROVIDER: custom
       VPN_TYPE: wireguard
       VPN_ENDPOINT_IP: ${LPC_VPN_ENDPOINT_IP}
@@ -131,8 +124,3 @@ services:
       WIREGUARD_PRIVATE_KEY: ${LPC_WIREGUARD_PRIVATE_KEY}
       WIREGUARD_PRESHARED_KEY: ${LPC_WIREGUARD_PRESHARED_KEY}
       WIREGUARD_ADDRESSES: ${LPC_WIREGUARD_ADDRESSES}
-    ports:
-      - 8191:8191
-      - 9117:9117
-      - 7878:7878
-      - 8989:8989
