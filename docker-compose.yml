@@ -115,7 +115,7 @@ services:
       - NET_ADMIN
     environment:
       HTTPPROXY: "on"
-      HTTPPROXY_LISTENING_ADDRESS: "8888"
+      HTTPPROXY_LISTENING_ADDRESS: ":8888"
       VPN_SERVICE_PROVIDER: custom
       VPN_TYPE: wireguard
       VPN_ENDPOINT_IP: ${LPC_VPN_ENDPOINT_IP}
