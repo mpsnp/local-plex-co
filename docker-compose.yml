@@ -26,6 +26,9 @@ services:
       TZ: ${LPC_TIMEZONE}
       PLEX_CLAIM: ${LPC_PLEX_CLAIM}
       ADVERTISE_IP: http://plex.local/
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "002"
     hostname: plex.local
     volumes:
       - ./plex/config:/config
@@ -44,6 +47,9 @@ services:
     environment:
       VIRTUAL_HOST: sonarr.local
       VIRTUAL_PORT: "8989"
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "002"
     depends_on:
       - qbittorrent
       - jackett
@@ -61,6 +67,9 @@ services:
     environment:
       VIRTUAL_HOST: radarr.local
       VIRTUAL_PORT: "7878"
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "002"
     depends_on:
       - qbittorrent
       - jackett
@@ -76,6 +85,9 @@ services:
       TZ: ${LPC_TIMEZONE}
       WEBUI_PORT: "8068"
       TORRENTING_PORT: "6881"
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "002"
     volumes:
       - ./qbittorrent:/config
       - ./downloads:/downloads
