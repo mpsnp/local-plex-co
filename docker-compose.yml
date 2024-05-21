@@ -6,7 +6,17 @@ services:
     ports:
       - 80:80
     volumes:
-      - /run/user/1000/docker.sock:/tmp/docker.sock:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  
+  mdns:
+    container_name: "docker-mdns"
+    image: "ghcr.io/phyber/docker-mdns:latest"
+    network_mode: "host"
+    command:
+      - "eth0"
+    volumes:
+      - "/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:rw"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     
   plex:
     container_name: plex
@@ -31,6 +41,9 @@ services:
       PGID: "0"
       UMASK: "022"
     hostname: plex.local
+    labels:
+      docker-mdns.enable: "true"
+      docker-mdns.host: "plex.local"
     volumes:
       - ./plex/config:/config
       - ./plex/transcode:/transcode
@@ -41,6 +54,9 @@ services:
     image: linuxserver/sonarr
     restart: unless-stopped
     hostname: sonarr.local
+    labels:
+      docker-mdns.enable: "true"
+      docker-mdns.host: "sonarr.local"
     volumes:
       - ./sonarr:/config
       - ./data:/data
@@ -59,6 +75,9 @@ services:
     image: linuxserver/radarr
     restart: unless-stopped
     hostname: radarr.local
+    labels:
+      docker-mdns.enable: "true"
+      docker-mdns.host: "radarr.local"
     volumes:
       - ./radarr:/config
       - ./data:/data
@@ -85,6 +104,9 @@ services:
       PUID: "0"
       PGID: "0"
       UMASK: "022"
+    labels:
+      docker-mdns.enable: "true"
+      docker-mdns.host: "qbittorrent.local"
     volumes:
       - ./qbittorrent:/config
       - ./data/torrents:/data/torrents
@@ -101,6 +123,9 @@ services:
       VIRTUAL_HOST: jackett.local
       VIRTUAL_PORT: "9117"
     hostname: jackett.local
+    labels:
+      docker-mdns.enable: "true"
+      docker-mdns.host: "jackett.local"
     volumes:
       - ./jackett:/config
     depends_on:
