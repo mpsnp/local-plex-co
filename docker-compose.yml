@@ -8,6 +8,17 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
   
+  avahi:
+    container_name: avahi
+    image: flungo/avahi
+    environment:
+      SERVER_HOST_NAME: 'pc-media-box'
+      SERVER_DOMAIN_NAME: 'local'
+    volumes:
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+    network_mode: "host"
+    restart: unless-stopped
+
   mdns:
     container_name: "docker-mdns"
     image: "ghcr.io/phyber/docker-mdns:latest"
